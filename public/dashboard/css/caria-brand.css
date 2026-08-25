@@ -1,0 +1,835 @@
+/* ===========================================================
+   CaRiA Brand Overlay — sits on top of Dasher's theme.css
+   Inherits Bootstrap 5.3 [data-bs-theme] dark/light system.
+   =========================================================== */
+
+/* ---------- Brand tokens ---------- */
+:root {
+    --ca-primary: #6366f1;
+    --ca-primary-2: #8b5cf6;
+    --ca-accent: #06b6d4;
+    --ca-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+    --ca-glow: 0 0 40px rgba(99, 102, 241, 0.35);
+    --ca-shadow-card: 0 12px 32px rgba(15, 23, 42, 0.06);
+    --ca-shadow-card-hover: 0 20px 48px rgba(99, 102, 241, 0.18);
+    --ca-font-heading: 'Space Grotesk', system-ui, -apple-system, 'Public Sans', sans-serif;
+    --ca-font-body: 'Inter', system-ui, -apple-system, 'Public Sans', sans-serif;
+}
+
+[data-bs-theme="dark"] {
+    --ca-shadow-card: 0 12px 32px rgba(0, 0, 0, 0.4);
+    --ca-shadow-card-hover: 0 20px 48px rgba(99, 102, 241, 0.3);
+}
+
+/* ---------- Typography refresh ---------- */
+body {
+    font-family: var(--ca-font-body) !important;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: var(--ca-font-heading) !important;
+    letter-spacing: -0.015em;
+}
+
+/* ---------- Wordmark ---------- */
+.ca-logo-text {
+    font-family: var(--ca-font-heading) !important;
+    font-weight: 700 !important;
+    font-size: 1.4rem !important;
+    letter-spacing: -0.02em;
+    line-height: 1;
+}
+
+.ca-logo-text .ca-c,
+.ca-logo-text .ca-r,
+.ca-logo-text .ca-a-up {
+    background: var(--ca-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.ca-logo-text .ca-a,
+.ca-logo-text .ca-i {
+    opacity: 0.55;
+}
+
+/* ---------- Gradient text ---------- */
+.ca-gradient-text {
+    background: var(--ca-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    background-size: 200% 200%;
+    animation: ca-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes ca-shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* ---------- Welcome banner (matches dashboard surface, subtle gradient accent) ---------- */
+.ca-welcome-banner {
+    position: relative;
+    border-radius: 14px;
+    padding: 2rem 2.25rem;
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-body-color);
+    overflow: hidden;
+    isolation: isolate;
+}
+
+[data-bs-theme="dark"] .ca-welcome-banner {
+    background: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.08);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+/* very subtle gradient accent — does NOT take over the surface */
+.ca-welcome-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 90% 10%, rgba(99,102,241,0.10), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(6,182,212,0.06), transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+[data-bs-theme="dark"] .ca-welcome-banner::before {
+    background:
+        radial-gradient(circle at 90% 10%, rgba(99,102,241,0.18), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(6,182,212,0.10), transparent 50%);
+}
+
+.ca-welcome-banner h1 {
+    color: var(--bs-body-color) !important;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.ca-welcome-banner p {
+    color: var(--bs-secondary-color);
+}
+
+.ca-welcome-banner .btn-light {
+    background: var(--ca-gradient);
+    background-size: 200% 200%;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.ca-welcome-banner .btn-light:hover {
+    background-position: 100% 0;
+    transform: translateY(-1px);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.35);
+    color: #fff;
+}
+
+.ca-welcome-banner .btn-outline-light {
+    border-color: var(--bs-border-color);
+    color: var(--bs-body-color);
+    background: transparent;
+    font-weight: 600;
+}
+
+.ca-welcome-banner .btn-outline-light:hover {
+    background: var(--bs-tertiary-bg);
+    border-color: var(--ca-primary);
+    color: var(--bs-body-color);
+}
+
+/* ---------- Stat / refined cards ---------- */
+.ca-stat-card {
+    position: relative;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    overflow: hidden;
+}
+
+.ca-stat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, transparent, rgba(99,102,241,0.25), transparent);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.ca-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ca-shadow-card-hover);
+}
+
+.ca-stat-card:hover::before { opacity: 1; }
+
+/* ---------- Glow button ---------- */
+.ca-glow-btn {
+    background: var(--ca-gradient);
+    background-size: 200% 200%;
+    color: #fff !important;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
+    font-weight: 600;
+}
+
+.ca-glow-btn:hover {
+    background-position: 100% 0;
+    box-shadow: var(--ca-glow);
+    transform: translateY(-1px);
+    color: #fff !important;
+}
+
+/* ---------- Sidebar polish ---------- */
+#miniSidebar .brand-logo .ca-logo-text {
+    margin-left: 6px;
+}
+
+#miniSidebar .nav-link.active {
+    position: relative;
+}
+
+#miniSidebar .nav-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--ca-gradient);
+}
+
+#miniSidebar .nav-link {
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+#miniSidebar .nav-link:hover {
+    transform: translateX(2px);
+}
+
+/* ---------- Topbar avatar ring ---------- */
+.navbar-glass .dropdown .avatar img,
+.navbar-glass .ms-3.dropdown img {
+    border: 2px solid transparent;
+    background: linear-gradient(var(--bs-body-bg), var(--bs-body-bg)) padding-box,
+                var(--ca-gradient) border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.navbar-glass .ms-3.dropdown a:hover img {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+}
+
+/* ---------- Ring progress ---------- */
+.ca-ring {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ca-ring svg {
+    transform: rotate(-90deg);
+    overflow: visible;
+}
+
+.ca-ring .ca-ring-track {
+    stroke: rgba(148, 163, 184, 0.18);
+    fill: none;
+}
+
+.ca-ring .ca-ring-fill {
+    fill: none;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ca-ring-success .ca-ring-fill { stroke: #22c55e; }
+.ca-ring-warning .ca-ring-fill { stroke: #f59e0b; }
+.ca-ring-danger  .ca-ring-fill { stroke: #ef4444; }
+.ca-ring-primary .ca-ring-fill { stroke: url(#caRingGrad); }
+
+.ca-ring-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ca-font-heading);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--bs-body-color);
+}
+
+.ca-ring-label small {
+    font-family: var(--ca-font-body);
+    font-weight: 500;
+    font-size: 0.65em;
+    color: var(--bs-secondary-color);
+    margin-top: 2px;
+}
+
+/* ---------- Auth split-panel shell ---------- */
+.ca-auth-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 992px) {
+    .ca-auth-shell {
+        grid-template-columns: 5fr 6fr;
+    }
+}
+
+.ca-auth-form-side {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2.5rem;
+    background: var(--bs-body-bg);
+    position: relative;
+    min-height: 100vh;
+}
+
+.ca-auth-form-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.ca-auth-form-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ca-auth-form-inner {
+    width: 100%;
+    max-width: 420px;
+}
+
+.ca-auth-form-inner h1 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.ca-auth-hero-side {
+    display: none;
+    position: relative;
+    background: #0a0b14;
+    color: #fff;
+    overflow: hidden;
+    isolation: isolate;
+    padding: 2.5rem;
+}
+
+@media (min-width: 992px) {
+    .ca-auth-hero-side {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+    }
+}
+
+.ca-auth-hero-side::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 20% 10%, rgba(99,102,241,0.45), transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(139,92,246,0.35), transparent 55%),
+        radial-gradient(circle at 50% 100%, rgba(6,182,212,0.3), transparent 60%);
+    z-index: -2;
+    animation: ca-bg-drift 22s ease-in-out infinite;
+}
+
+.ca-auth-hero-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, #000 30%, transparent 80%);
+    z-index: -1;
+}
+
+@keyframes ca-bg-drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(2%, -1%); }
+}
+
+.ca-auth-hero-mark {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 8px 24px rgba(99,102,241,0.5));
+}
+
+.ca-auth-hero-title {
+    font-size: 2.4rem !important;
+    font-weight: 700 !important;
+    line-height: 1.1 !important;
+    color: #fff !important;
+    margin-bottom: 1rem !important;
+    max-width: 520px;
+}
+
+.ca-auth-hero-sub {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.78) !important;
+    max-width: 480px;
+    line-height: 1.6;
+    margin-bottom: 2.5rem;
+}
+
+/* ---------- Auth preview stack (replaces testimonial) ---------- */
+.ca-auth-preview {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    min-height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ca-auth-preview-stack {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    height: 480px;
+    margin: 0 auto;
+}
+
+.ca-pcard {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.07);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 18px 20px;
+    color: #fff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    will-change: transform;
+}
+
+.ca-pcard-1 { top: 20px;  left: 0;     width: 280px; animation: ca-float 6s ease-in-out infinite; }
+.ca-pcard-2 { top: 110px; right: 20px; width: 260px; animation: ca-float 7s ease-in-out infinite 1s; }
+.ca-pcard-3 { top: 240px; left: 30px;  width: 290px; animation: ca-float 8s ease-in-out infinite 0.5s; }
+.ca-pcard-4 { top: 340px; right: 0;    width: 260px; animation: ca-float 6.5s ease-in-out infinite 1.5s; }
+
+@keyframes ca-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.ca-pcard .lbl {
+    font-family: var(--ca-font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #c4b5fd;
+    margin-bottom: 6px;
+}
+
+.ca-pcard .ttl {
+    font-family: var(--ca-font-heading);
+    font-weight: 600;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.ca-pcard .meta {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.ca-pcard .ca-pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 4px;
+    margin-top: 8px;
+    background: rgba(99, 102, 241, 0.18);
+    color: #c4b5fd;
+}
+
+.ca-pcard .ca-pill-success { background: rgba(34, 197, 94, 0.18); color: #86efac; }
+.ca-pcard .ca-pill-warn { background: rgba(245, 158, 11, 0.18); color: #fcd34d; }
+
+.ca-pcard-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.ca-auth-hero-side .ca-logo-text {
+    color: #fff;
+    font-size: 1.6rem !important;
+}
+
+.ca-auth-hero-side .ca-logo-text .ca-a,
+.ca-auth-hero-side .ca-logo-text .ca-i {
+    color: rgba(255, 255, 255, 0.55);
+    background: none;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.55);
+}
+
+.ca-auth-hero-bottom {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Theme toggle in auth top-bar */
+.ca-auth-form-top .dropdown-menu {
+    min-width: 140px;
+}
+
+/* Hide default Mazer auth shell when our split-panel is active */
+body.ca-auth-page #auth { display: none !important; }
+
+/* ===========================================================
+   PREMIUM PRIMITIVES — match landing page polish
+   =========================================================== */
+
+/* ---------- Scroll progress bar inside dashboard ---------- */
+.ca-scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    background: var(--ca-gradient);
+    z-index: 1040;
+    transition: width 0.06s linear;
+    pointer-events: none;
+}
+
+/* ---------- Eyebrow label ---------- */
+.ca-eyebrow {
+    display: inline-block;
+    font-family: var(--ca-font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ca-primary);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+/* ---------- Page heading block (every dashboard page) ---------- */
+.ca-page-heading {
+    margin-bottom: 2rem;
+}
+
+.ca-page-heading .ca-eyebrow {
+    margin-bottom: 12px;
+}
+
+.ca-page-heading h1 {
+    font-family: var(--ca-font-heading);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    letter-spacing: -0.02em;
+}
+
+.ca-page-heading p {
+    color: var(--bs-secondary-color);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* ---------- Glass card primitive ---------- */
+.ca-card {
+    position: relative;
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    overflow: hidden;
+}
+
+[data-bs-theme="dark"] .ca-card {
+    background: rgba(255, 255, 255, 0.03);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ca-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(99,102,241,0), rgba(99,102,241,0.4), rgba(6,182,212,0));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.ca-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--ca-shadow-card-hover);
+}
+
+.ca-card:hover::before { opacity: 1; }
+
+/* ---------- Welcome banner upgrade (taller + embedded card) ---------- */
+.ca-welcome-banner {
+    min-height: 240px;
+    padding: 2rem 2.25rem;
+}
+
+.ca-welcome-status-card {
+    background: var(--bs-tertiary-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 14px;
+    padding: 1.25rem;
+    color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .ca-welcome-status-card {
+    background: rgba(255, 255, 255, 0.04);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-color: rgba(255, 255, 255, 0.10);
+}
+
+.ca-welcome-status-card .lbl {
+    font-family: var(--ca-font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ca-primary);
+    margin-bottom: 6px;
+}
+
+.ca-welcome-status-card .val {
+    font-family: var(--ca-font-heading);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    color: var(--bs-body-color);
+    margin-bottom: 4px;
+}
+
+.ca-welcome-status-card .sub {
+    font-size: 12px;
+    color: var(--bs-secondary-color);
+}
+
+/* ---------- Job card 3-row layout (fixes ring overlap) ---------- */
+.ca-job-card .ca-job-meta-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--bs-secondary-color);
+    font-size: 0.875rem;
+    margin-bottom: 10px;
+}
+
+.ca-job-card h5.ca-job-title {
+    font-size: 1.05rem;
+    line-height: 1.35;
+    margin-bottom: 16px;
+    /* allow wrap up to 2 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.ca-job-card .ca-job-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.ca-job-card .ca-job-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    color: var(--bs-secondary-color);
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.ca-job-card .ca-job-info span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.ca-job-card .ca-job-skill {
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--ca-primary);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid rgba(99, 102, 241, 0.22);
+}
+
+[data-bs-theme="dark"] .ca-job-card .ca-job-skill {
+    background: rgba(99, 102, 241, 0.18);
+    color: #c4b5fd;
+}
+
+/* ---------- Indeterminate ring for CV processing ---------- */
+.ca-cv-loader {
+    width: 140px;
+    height: 140px;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ca-cv-loader svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+    animation: ca-cv-rotate 2.4s linear infinite;
+}
+
+.ca-cv-loader .track {
+    fill: none;
+    stroke: rgba(148, 163, 184, 0.18);
+    stroke-width: 6;
+}
+
+.ca-cv-loader .arc {
+    fill: none;
+    stroke: url(#caRingGrad);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 90 360;
+    stroke-dashoffset: 0;
+    animation: ca-cv-dash 2.4s ease-in-out infinite;
+}
+
+@keyframes ca-cv-rotate {
+    100% { transform: rotate(270deg); }
+}
+
+@keyframes ca-cv-dash {
+    0%   { stroke-dasharray: 1 360; stroke-dashoffset: 0; }
+    50%  { stroke-dasharray: 200 360; stroke-dashoffset: -60; }
+    100% { stroke-dasharray: 1 360; stroke-dashoffset: -360; }
+}
+
+.ca-cv-loader-label {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ca-font-mono);
+    font-size: 12px;
+    color: var(--ca-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* ---------- Sidebar active item: glassy gradient pill ---------- */
+#miniSidebar .nav-link.active::before {
+    /* override the simple 3px line from earlier, keep ::before for the pill */
+    content: none;
+}
+
+#miniSidebar .nav-link.active {
+    position: relative;
+    background: linear-gradient(135deg, rgba(99,102,241,0.16), rgba(139,92,246,0.10), rgba(6,182,212,0.08));
+    border-radius: 10px;
+}
+
+#miniSidebar .nav-link.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--ca-gradient);
+}
+
+/* ---------- Notification badge gradient ---------- */
+.navbar-glass .badge.bg-danger {
+    background: var(--ca-gradient) !important;
+    border: 0;
+}
+
+/* ---------- Empty state polish ---------- */
+.ca-empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.ca-empty-state .ico {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+    border: 1px solid rgba(99, 102, 241, 0.22);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ca-primary);
+    font-size: 28px;
+    margin-bottom: 16px;
+}
+
+/* ---------- Min-width helper used by job cards ---------- */
+.min-w-0 { min-width: 0; }
+
